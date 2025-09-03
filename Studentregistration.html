@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-500 via-blue-600 to-indigo-700 p-6">
+  <div class="w-full max-w-lg bg-white/20 backdrop-blur-xl rounded-2xl shadow-2xl p-8 animate-fadeIn">
+    <h1 class="text-3xl font-bold text-white text-center mb-6">Student Registration</h1>
+    <form id="registrationForm" class="space-y-5">
+      <!-- First Name -->
+      <div>
+        <label for="first_name" class="block text-sm font-medium text-white mb-1">First Name</label>
+        <input type="text" id="first_name" name="first_name" required placeholder="John"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Last Name -->
+      <div>
+        <label for="last_name" class="block text-sm font-medium text-white mb-1">Last Name</label>
+        <input type="text" id="last_name" name="last_name" required placeholder="Doe"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+
+
+      <!-- Username -->
+      <div>
+        <label for="username" class="block text-sm font-medium text-white mb-1">Username</label>
+        <input type="text" id="username" name="username" required placeholder="johndoe"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password_hash" class="block text-sm font-medium text-white mb-1">Password</label>
+        <input type="password" id="password_hash" name="password_hash" required placeholder="********"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Registration Date -->
+      <div>
+        <label for="registration_date" class="block text-sm font-medium text-white mb-1">Registration Date</label>
+        <input type="date" id="registration_date" name="registration_date" required
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Date of Birth -->
+      <div>
+        <label for="date_of_birth" class="block text-sm font-medium text-white mb-1">Date of Birth</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" required
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Course -->
+      <div>
+        <label for="course" class="block text-sm font-medium text-white mb-1">Course</label>
+        <input type="text" id="course" name="course" required placeholder="Computer Science"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Gender -->
+      <div>
+        <label for="gender" class="block text-sm font-medium text-white mb-1">Gender</label>
+        <select id="gender" name="gender" required
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white focus:outline-none focus:ring-2 focus:ring-teal-300">
+          <option value="" disabled selected class="text-gray-700">Select Gender</option>
+          <option value="male" class="text-gray-700">Male</option>
+          <option value="female" class="text-gray-700">Female</option>
+          <option value="other" class="text-gray-700">Other</option>
+        </select>
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label for="phone" class="block text-sm font-medium text-white mb-1">Phone</label>
+        <input type="tel" id="phone" name="phone" required placeholder="+27 123 456 789"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-white mb-1">Email</label>
+        <input type="email" id="email" name="email" required placeholder="student@university.edu"
+          class="w-full px-4 py-3 rounded-xl bg-white/30 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-300">
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+        class="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg transform transition hover:scale-105 hover:from-teal-600 hover:to-blue-700">
+        Register
+      </button>
+
+      <p id="statusMsg" class="text-center text-sm mt-4 text-white"></p>
+    </form>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 1s ease-out;
+    }
+  </style>
+
+  <script>
+    // Replace with your Supabase project credentials
+    const SUPABASE_URL = "https://gnehpyyvokyykthqnhad.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImduZWhweXl2b2t5eWt0aHFuaGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1NzQ0OTAsImV4cCI6MjA3MjE1MDQ5MH0.hY3tbvia4PUdNyECo4WGG_Je8SFSOfiNqrkIrWc4Vx0";
+
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('registrationForm');
+    const statusMsg = document.getElementById('statusMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const studentData = Object.fromEntries(formData);
+
+      const { error } = await sb.from('students').insert([studentData]);
+
+      if (error) {
+        statusMsg.textContent = `Error: ${error.message}`;
+        statusMsg.classList.add('text-red-400');
+      } else {
+        statusMsg.textContent = "Registration successful!";
+        statusMsg.classList.add('text-green-300');
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
